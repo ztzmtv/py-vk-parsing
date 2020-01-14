@@ -33,14 +33,14 @@ def file_writer(data):
         a_pen = csv.writer(file)
         a_pen.writerow(('likes', 'body', 'url'))
         for post in data:
-            try:
-                if post['attachments'][0]['type']:
+            try:                                            # тут только работа с фото
+                if post['attachments'][0]['type']:          # если всё норм - это урл
                     img_url=post['attachments'][0]['photo']['sizes'][-1]['url']
                 else:
-                    img_url='pass'
+                    img_url='pass'                          #нет - это пасс
             except:
                 pass
-            a_pen.writerow((post['likes']['count'], post['text'], img_url))
+            a_pen.writerow((post['likes']['count'], post['text'], img_url)) #запись строки и переход к след. в цикле
 
 all_posts = take_1000_posts()
 print(1)
