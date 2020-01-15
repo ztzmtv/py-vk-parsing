@@ -2,36 +2,47 @@ import requests
 
 token = '7e45fabc7e45fabc7e45fabca47e2aed5277e457e45fabc2059516aed33d0bbd348d15b'
 version = 5.103
-f_user=1028790
+f_user = 151861157
+data = []
+opened_users = []
 
-def get_user_info(user_id):
-    response = requests.get('https://api.vk.com/method/users.get',
-                            params={
-                                'access_token': token,
-                                'v': version,
-                                'user_ids': user_id,
-                                'fields': 'photo_id, verified, sex, bdate, city, country, home_town, has_photo, photo_50, photo_100, photo_200_orig, photo_200, photo_400_orig, photo_max, photo_max_orig, online, domain, has_mobile, contacts, site, education, universities, schools, status, last_seen, followers_count, occupation, nickname, relatives, relation, personal, connections, exports, activities, interests, music, movies, tv, books, games, about, quotes, can_post, can_see_all_posts, can_see_audio, can_write_private_message, can_send_friend_request, is_favorite, is_hidden_from_feed, timezone, screen_name, maiden_name, crop_photo, is_friend, friend_status, career, military, blacklisted, blacklisted_by_me, can_be_invited_group',
-                                'name_case': 'Nom'
-                            }
-                            )
-    return response.json()
+def all_friends_info(user_id):
+    friends = []
+    response_friends = requests.get('https://api.vk.com/method/users.getFollowers',
+                                    params={
+                                        'access_token': token,
+                                        'v': version,
+                                        'user_id': user_id,
+                                        'count': 1000,
+                                        'fields': 'photo_id, verified, sex, bdate, city, country, home_town, has_photo, '
+                                                  'photo_max_orig, online, lists, domain, has_mobile, contacts, site, education, '
+                                                  'universities, schools, status, last_seen, followers_count, occupation, '
+                                                  'nickname, relatives, relation, personal, connections, exports, wall_comments, '
+                                                  'activities, interests, music, movies, tv, books, games, about, quotes, '
+                                                  'can_post, can_see_all_posts, can_see_audio, can_write_private_message, '
+                                                  'can_send_friend_request, is_favorite, is_hidden_from_feed, timezone, '
+                                                  'screen_name, maiden_name, is_friend, friend_status, career, military, '
+                                                  'blacklisted'
+                                    }
+                                    )
 
-#data = get_user_info(f_user)
+    data_friends = response_friends.json()['response']['items']
+    friends.extend(data_friends)
+    return friends
 
-response_friends = requests.get('https://api.vk.com/method/friends.get',
-                            params={
-                                'access_token': token,
-                                'v': version,
-                                'user_id': 1,
-                                'order':'name',
-                            }
-                            )
-data_friends=response_friends.json()
+def opened_accs_arr(data):
+    opened_accs = []
+    for post in data:
+        if post['is_closed']:
+            opened_accs.append(post['id'])
+    return opened_accs
 
-print(1)
+# Start
+opened_users.append(f_user)
+for ids in opened_users:
+    data1 = all_friends_info(ids)
 
-# https://vk.com/dev/users.get?
-# params[user_ids]=1028790
-# &params[fields]=photo_50%2Ccity%2Cverified
-# &params[name_case]=Nom
-# &params[v]=5.103
+data = all_friends_info(f_user)
+#data нужно сохранить
+op_accs = opened_accs_arr(data)
+
