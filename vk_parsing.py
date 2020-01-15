@@ -42,7 +42,7 @@ def file_writer(data):
                 pass
             a_pen.writerow((post['likes']['count'], post['text'], img_url)) #запись строки и переход к след. в цикле
 
-all_posts = take_1000_posts()
+#all_posts = take_1000_posts()
 print(1)
 file_writer(all_posts)
 
