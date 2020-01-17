@@ -5,6 +5,8 @@ version = 5.103
 f_user = 151861157
 data = []
 opened_users = []
+op_accs = []
+
 
 def all_friends_info(user_id):
     friends = []
@@ -30,19 +32,34 @@ def all_friends_info(user_id):
     friends.extend(data_friends)
     return friends
 
+# проверяет
 def opened_accs_arr(data):
     opened_accs = []
     for post in data:
-        if post['is_closed']:
-            opened_accs.append(post['id'])
+        try:
+            if post['can_access_closed']:
+                opened_accs.append(post['id'])
+        except:
+            pass
     return opened_accs
+
+
+# проверка на наличие в массиве
+def check_if_in_arr(x, arr=[]):
+    result = False
+    for a in arr:
+        if x == a:
+            result = True
+    return result
+
 
 # Start
 opened_users.append(f_user)
+
 for ids in opened_users:
-    data1 = all_friends_info(ids)
-
-data = all_friends_info(f_user)
-#data нужно сохранить
-op_accs = opened_accs_arr(data)
-
+    data = all_friends_info(ids)
+    if (not check_if_in_arr(data[], opened_users)):
+        opened_users.append(data[0]['id'])
+#    op_accs = opened_accs_arr(data)
+print(1)
+    # data нужно сохранить
